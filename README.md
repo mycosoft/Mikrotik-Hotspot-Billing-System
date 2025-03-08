@@ -71,59 +71,6 @@ Follow these steps to set up the Mikrotik Hotspot Billing System on your server:
 - MikroTik Router with API access
 - Node.js and NPM (for frontend assets)
 
-### Step 1: Clone the Repository
-```bash
-git clone https://github.com/mycosoft/Mikrotik-Hotspot-Billing-System.git
-cd Mikrotik-Hotspot-Billing-System
-```
-
-### Step 2: Install Dependencies
-```bash
-composer install
-npm install
-```
-
-### Step 3: Configure Environment
-Copy the `.env.example` file to `.env` and update the database and MikroTik API settings:
-```bash
-cp .env.example .env
-```
-
-Edit the `.env` file:
-```env
-DB_DATABASE=your_database_name
-DB_USERNAME=your_database_user
-DB_PASSWORD=your_database_password
-
-MIKROTIK_HOST=your_mikrotik_ip
-MIKROTIK_USER=your_mikrotik_user
-MIKROTIK_PASS=your_mikrotik_password
-```
-
-### Step 4: Generate Application Key
-```bash
-php artisan key:generate
-```
-
-### Step 5: Run Migrations
-```bash
-php artisan migrate --seed
-```
-
-### Step 6: Compile Assets
-```bash
-npm run dev
-```
-
-### Step 7: Start the Application
-```bash
-php artisan serve
-```
-
-Visit `http://localhost:8000` in your browser to access the Mikrotik Hotspot Billing System dashboard.
-
----
-
 ## Contributing
 
 We welcome contributions from the community! Whether you're a developer, designer, or tester, your help is appreciated.
@@ -156,15 +103,6 @@ For support, questions, or feature requests, please:
 
 ---
 
-## Acknowledgments
-
-We would like to thank the following for their contributions to the project:
-- The **Laravel** community for an amazing framework.
-- **Tailwind CSS** for making styling a breeze.
-- All contributors who have helped improve the Mikrotik Hotspot Billing System.
-
----
-
 ## Screenshots
 
 ![Dashboard](link-to-dashboard-screenshot)  
@@ -175,15 +113,6 @@ We would like to thank the following for their contributions to the project:
 
 ![Voucher Management](link-to-voucher-mgt-screenshot)  
 *Voucher Management Module*
-
----
-
-## Roadmap
-
-- [ ] Add multi-language support.
-- [ ] Integrate payment gateways (PayPal, Stripe, etc.).
-- [ ] Develop a mobile app for customer self-service.
-- [ ] Add advanced analytics and reporting features.
 
 ---
 
