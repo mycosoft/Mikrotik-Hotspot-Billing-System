@@ -1,66 +1,194 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Mikrotik Hotspot Billing System
 
-## About Laravel
+**Mikrotik Hotspot Billing System** is an open-source web application designed to automate and manage hotspot billing businesses using the MikroTik Router API. Built with **Laravel** (PHP framework) and **Tailwind CSS**, this system provides a comprehensive solution for managing customers, vouchers, routers, internet plans, and financial reports. It is ideal for businesses offering hotspot services and looking for a scalable, customizable, and user-friendly billing system.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The Mikrotik Hotspot Billing System comes with a wide range of features to streamline your hotspot management:
 
-## Learning Laravel
+### 1. **Customer Management**
+   - Add, edit, and manage customer details.
+   - Track customer subscriptions and usage.
+   - Automate customer onboarding and offboarding.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. **Voucher Management**
+   - Generate single or bulk vouchers for prepaid users.
+   - Set voucher validity periods and usage limits.
+   - Print vouchers directly from the system.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 3. **Router Management**
+   - Integrate with MikroTik routers via API.
+   - Manage multiple routers from a single dashboard.
+   - Monitor router status and performance.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. **Internet Plans**
+   - Create and manage customizable internet plans.
+   - Assign plans to customers or vouchers.
+   - Set pricing, duration, and data limits.
 
-## Laravel Sponsors
+### 5. **Bandwidth Management**
+   - Define and manage bandwidth profiles.
+   - Assign bandwidth limits to customers and vouchers.
+   - Monitor real-time bandwidth usage.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 6. **Active User Sessions**
+   - View and manage active user sessions.
+   - Monitor session duration and data usage.
+   - Terminate sessions remotely if needed.
 
-### Premium Partners
+### 7. **Finance Management**
+   - Track payments and revenue.
+   - Generate invoices and receipts.
+   - View financial reports and analytics.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 8. **Reports**
+   - Generate detailed reports on customer usage, revenue, and more.
+   - Export reports in PDF or CSV formats.
+   - Schedule automated report generation.
+
+### 9. **User-Friendly Interface**
+   - Built with **Tailwind CSS** for a modern and responsive design.
+   - Intuitive dashboard for easy navigation.
+   - Customizable themes and layouts.
+
+### 10. **Open Source**
+   - Fully open-source, allowing developers to contribute and customize.
+   - Regular updates and community-driven improvements.
+
+---
+
+## Installation
+
+Follow these steps to set up the Mikrotik Hotspot Billing System on your server:
+
+### Prerequisites
+- PHP 8.0 or higher
+- Composer
+- MySQL or MariaDB
+- MikroTik Router with API access
+- Node.js and NPM (for frontend assets)
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/mycosoft/Mikrotik-Hotspot-Billing-System.git
+cd Mikrotik-Hotspot-Billing-System
+```
+
+### Step 2: Install Dependencies
+```bash
+composer install
+npm install
+```
+
+### Step 3: Configure Environment
+Copy the `.env.example` file to `.env` and update the database and MikroTik API settings:
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file:
+```env
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_user
+DB_PASSWORD=your_database_password
+
+MIKROTIK_HOST=your_mikrotik_ip
+MIKROTIK_USER=your_mikrotik_user
+MIKROTIK_PASS=your_mikrotik_password
+```
+
+### Step 4: Generate Application Key
+```bash
+php artisan key:generate
+```
+
+### Step 5: Run Migrations
+```bash
+php artisan migrate --seed
+```
+
+### Step 6: Compile Assets
+```bash
+npm run dev
+```
+
+### Step 7: Start the Application
+```bash
+php artisan serve
+```
+
+Visit `http://localhost:8000` in your browser to access the Mikrotik Hotspot Billing System dashboard.
+
+---
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+We welcome contributions from the community! Whether you're a developer, designer, or tester, your help is appreciated.
 
-## Code of Conduct
+### How to Contribute
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Commit your changes and push to your branch.
+4. Submit a pull request with a detailed description of your changes.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Reporting Issues
+If you encounter any issues, please open an issue on GitHub with the following details:
+- A clear description of the problem.
+- Steps to reproduce the issue.
+- Screenshots or error logs (if applicable).
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The Mikrotik Hotspot Billing System is released under the **MIT License**. Feel free to use, modify, and distribute the software as per the license terms.
+
+---
+
+## Support
+
+For support, questions, or feature requests, please:
+- Open an issue on GitHub.
+- Join our community forum (link to be added).
+
+---
+
+## Acknowledgments
+
+We would like to thank the following for their contributions to the project:
+- The **Laravel** community for an amazing framework.
+- **Tailwind CSS** for making styling a breeze.
+- All contributors who have helped improve the Mikrotik Hotspot Billing System.
+
+---
+
+## Screenshots
+
+![Dashboard](link-to-dashboard-screenshot)  
+*Dashboard Overview*
+
+![Customer Management](link-to-customer-mgt-screenshot)  
+*Customer Management Module*
+
+![Voucher Management](link-to-voucher-mgt-screenshot)  
+*Voucher Management Module*
+
+---
+
+## Roadmap
+
+- [ ] Add multi-language support.
+- [ ] Integrate payment gateways (PayPal, Stripe, etc.).
+- [ ] Develop a mobile app for customer self-service.
+- [ ] Add advanced analytics and reporting features.
+
+---
+
+Thank you for choosing the Mikrotik Hotspot Billing System! We look forward to your contributions and feedback to make this project even better. Happy coding! 🚀
+
+---
+
+This `README.md` provides a comprehensive overview of the project, its features, installation steps, and contribution guidelines. You can customize it further based on your specific needs or additional features in the repository. Let me know if you need further assistance!
