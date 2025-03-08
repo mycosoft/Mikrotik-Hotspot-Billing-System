@@ -60,10 +60,6 @@ The Mikrotik Hotspot Billing System comes with a wide range of features to strea
 
 ---
 
-## Installation
-
-Follow these steps to set up the Mikrotik Hotspot Billing System on your server:
-
 ### Prerequisites
 - PHP 8.0 or higher
 - Composer
@@ -93,16 +89,6 @@ If you encounter any issues, please open an issue on GitHub with the following d
 
 The Mikrotik Hotspot Billing System is released under the **MIT License**. Feel free to use, modify, and distribute the software as per the license terms.
 
----
-
-## Support
-
-For support, questions, or feature requests, please:
-- Open an issue on GitHub.
-- Join our community forum (link to be added).
-
----
-
 ## Screenshots
 
 ![Dashboard](link-to-dashboard-screenshot)  
@@ -119,5 +105,3 @@ For support, questions, or feature requests, please:
 Thank you for choosing the Mikrotik Hotspot Billing System! We look forward to your contributions and feedback to make this project even better. Happy coding! 🚀
 
 ---
-
-This `README.md` provides a comprehensive overview of the project, its features, installation steps, and contribution guidelines. You can customize it further based on your specific needs or additional features in the repository. Let me know if you need further assistance!
