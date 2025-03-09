@@ -60,13 +60,6 @@ The Mikrotik Hotspot Billing System comes with a wide range of features to strea
 
 ---
 
-### Prerequisites
-- PHP 8.0 or higher
-- Composer
-- MySQL or MariaDB
-- MikroTik Router with API access
-- Node.js and NPM (for frontend assets)
-
 ## Contributing
 
 We welcome contributions from the community! Whether you're a developer, designer, or tester, your help is appreciated.
@@ -76,12 +69,6 @@ We welcome contributions from the community! Whether you're a developer, designe
 2. Create a new branch for your feature or bugfix.
 3. Commit your changes and push to your branch.
 4. Submit a pull request with a detailed description of your changes.
-
-### Reporting Issues
-If you encounter any issues, please open an issue on GitHub with the following details:
-- A clear description of the problem.
-- Steps to reproduce the issue.
-- Screenshots or error logs (if applicable).
 
 ---
 
