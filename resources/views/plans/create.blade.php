@@ -58,39 +58,67 @@
                 width: '100%'
             });
 
-            // Handle limit type visibility
-            function updateLimitFields() {
-                var planType = $('input[name="type"]:checked').val();
-                var limitType = $('input[name="limit_type"]:checked').val();
-                
+            // Initialize select2
+            $('#bandwidth_id, #router_id').select2({
+                theme: 'bootstrap',
+                placeholder: 'Select an option'
+            });
+
+            // Handle plan type change
+            function handlePlanTypeChange() {
+                const planType = $('#type').val();
+                const limitTypeGroup = $('#limitTypeGroup');
+                const timeLimitGroup = $('#timeLimitGroup');
+                const dataLimitGroup = $('#dataLimitGroup');
+
                 if (planType === 'unlimited') {
-                    $('.time-limit-group, .data-limit-group').hide();
-                    $('#time_limit, #data_limit').prop('required', false);
+                    limitTypeGroup.hide();
+                    timeLimitGroup.hide();
+                    dataLimitGroup.hide();
+                    $('#limit_type').val('');
+                    $('#time_limit').val('');
+                    $('#data_limit').val('');
                 } else {
-                    if (limitType === 'time') {
-                        $('.time-limit-group').show();
-                        $('.data-limit-group').hide();
-                        $('#time_limit').prop('required', true);
-                        $('#data_limit').prop('required', false);
-                    } else if (limitType === 'data') {
-                        $('.time-limit-group').hide();
-                        $('.data-limit-group').show();
-                        $('#time_limit').prop('required', false);
-                        $('#data_limit').prop('required', true);
-                    } else if (limitType === 'both') {
-                        $('.time-limit-group, .data-limit-group').show();
-                        $('#time_limit, #data_limit').prop('required', true);
-                    }
+                    limitTypeGroup.show();
+                    handleLimitTypeChange();
                 }
             }
 
-            // Initial setup
-            updateLimitFields();
+            // Handle limit type change
+            function handleLimitTypeChange() {
+                const limitType = $('#limit_type').val();
+                const timeLimitGroup = $('#timeLimitGroup');
+                const dataLimitGroup = $('#dataLimitGroup');
 
-            // Update on change
-            $('input[name="type"], .limit-type').change(function() {
-                updateLimitFields();
-            });
+                switch (limitType) {
+                    case 'time':
+                        timeLimitGroup.show();
+                        dataLimitGroup.hide();
+                        $('#data_limit').val('');
+                        break;
+                    case 'data':
+                        timeLimitGroup.hide();
+                        dataLimitGroup.show();
+                        $('#time_limit').val('');
+                        break;
+                    case 'both':
+                        timeLimitGroup.show();
+                        dataLimitGroup.show();
+                        break;
+                    default:
+                        timeLimitGroup.hide();
+                        dataLimitGroup.hide();
+                        $('#time_limit').val('');
+                        $('#data_limit').val('');
+                }
+            }
+
+            // Attach event handlers
+            $('#type').change(handlePlanTypeChange);
+            $('#limit_type').change(handleLimitTypeChange);
+
+            // Initial setup
+            handlePlanTypeChange();
         });
     </script>
 @stop

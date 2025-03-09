@@ -35,7 +35,8 @@
             "PEAR2\\": "app/Libraries/PEAR2/"
         },
         "files": [
-            "app/Helpers/functions.php"
+            "app/Helpers/functions.php",
+            "app/Helpers/settings.php"
         ]
     },
     "autoload-dev": {

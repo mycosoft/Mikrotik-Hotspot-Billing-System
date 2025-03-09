@@ -271,7 +271,7 @@ function deletePlan(name, planId) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: `/plans/${planId}`,
+                url: "{{ route('plans.destroy', '') }}/" + planId,
                 type: 'DELETE',
                 data: {
                     _token: '{{ csrf_token() }}'
@@ -281,7 +281,8 @@ function deletePlan(name, planId) {
                         .then(() => window.location.reload());
                 },
                 error: function(xhr) {
-                    Swal.fire('Error', xhr.responseJSON?.message || 'Failed to delete plan', 'error');
+                    const error = xhr.responseJSON || {};
+                    Swal.fire('Error', error.message || 'Failed to delete plan', 'error');
                 }
             });
         }

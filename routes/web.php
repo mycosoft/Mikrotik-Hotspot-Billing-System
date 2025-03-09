@@ -7,18 +7,34 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\InternetPlanController;
 use App\Http\Controllers\BandwidthProfileController;
 use App\Http\Controllers\RouterController;
-use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ActiveSessionController;
 use App\Http\Controllers\BandwidthController;
-use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\VoucherActivationController;
+use App\Http\Controllers\ClientInfoController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\HotspotAuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
+// Public Routes
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('voucher.activate');
 });
 
+Route::get('/activate', [VoucherActivationController::class, 'showActivationForm'])->name('voucher.activate');
+Route::post('/activate', [VoucherActivationController::class, 'activate'])->name('voucher.activate.post');
+Route::get('/api/client-info', [ClientInfoController::class, 'getInfo'])->name('api.client-info');
+
+// Member Routes
+Route::get('/member/login', [MemberController::class, 'showLoginForm'])->name('member.login');
+Route::post('/member/login', [MemberController::class, 'login'])->name('member.login.post');
+Route::get('/member/dashboard', [MemberController::class, 'dashboard'])->name('member.dashboard')->middleware('auth');
+Route::get('/member/logout', [MemberController::class, 'logout'])->name('member.logout')->middleware('auth');
+
+// Auth Routes
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
@@ -94,12 +110,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('sessions/{session}/disconnect', [ActiveSessionController::class, 'disconnect'])->name('sessions.disconnect');
     });
 
-    // Settings routes (admin only)
-    // Route::middleware(['role:Super Admin|Admin'])->group(function () {
-    //     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
-    //     Route::get('/settings/general', [SettingsController::class, 'index'])->name('settings.general');
-    //     Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
-    // });
+    // Message Routes
+    Route::middleware(['auth'])->group(function () {
+        Route::get('messages/single', [MessageController::class, 'single'])->name('messages.single');
+        Route::post('messages/single', [MessageController::class, 'sendSingle'])->name('messages.send-single');
+        Route::get('messages/bulk', [MessageController::class, 'bulk'])->name('messages.bulk');
+        Route::post('messages/bulk', [MessageController::class, 'sendBulk'])->name('messages.send-bulk');
+    });
 
     // Settings Routes
     Route::middleware(['auth'])->prefix('settings')->name('settings.')->group(function () {
@@ -179,7 +196,12 @@ Route::post('/test/mikrotik-connection', function(Request $request) {
     }
 })->middleware('auth');
 
+// MikroTik Hotspot Routes
+Route::post('/hotspot/auth', [HotspotAuthController::class, 'authenticate'])->name('hotspot.auth');
+Route::get('/hotspot/status', [HotspotAuthController::class, 'status'])->name('hotspot.status');
+Route::post('/hotspot/activate', [HotspotAuthController::class, 'activateVoucher'])->name('hotspot.activate');
+
 require __DIR__.'/auth.php';
-Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
-Route::get('/settings/general', [SettingsController::class, 'index'])->name('settings.general');
-Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+Route::get('/settings/general', [SettingController::class, 'index'])->name('settings.general');
+Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');

@@ -3,177 +3,219 @@
 @section('title', 'Customer Details')
 
 @section('content_header')
-    <h1>Customer Details</h1>
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>Customer Details</h1>
+        <div>
+            <a href="{{ route('customers.edit', $customer) }}" class="btn btn-primary btn-sm">
+                <i class="fas fa-edit"></i> Edit Customer
+            </a>
+            <a href="{{ route('customers.index') }}" class="btn btn-secondary btn-sm ml-2">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
 @stop
 
 @section('content')
 <div class="row">
-    <div class="col-md-4">
-        <div class="card card-{{ $customer->status === 'active' ? 'primary' : 'danger' }}">
+    <div class="col-md-3">
+        <!-- Profile Card -->
+        <div class="card card-primary card-outline">
             <div class="card-body box-profile">
                 <div class="text-center">
                     <img class="profile-user-img img-fluid img-circle" 
-                         src="https://robohash.org/{{ $customer->id }}?set=set3&size=100x100&bgset=bg1" 
-                         alt="User profile picture">
+                         src="{{ $customer->profile_photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode($customer->name) }}" 
+                         alt="Customer profile picture">
                 </div>
-
                 <h3 class="profile-username text-center">{{ $customer->name }}</h3>
+                <p class="text-muted text-center">{{ $customer->username }}</p>
 
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
-                        <b>Status</b> 
-                        <span class="float-right badge badge-{{ $customer->status === 'active' ? 'success' : 'danger' }}">
-                            {{ ucfirst($customer->status) }}
+                        <b>Status</b>
+                        <span class="float-right">
+                            <span class="badge badge-{{ $customer->is_active ? 'success' : 'danger' }}">
+                                {{ $customer->is_active ? 'Active' : 'Inactive' }}
+                            </span>
                         </span>
                     </li>
                     <li class="list-group-item">
-                        <b>Username</b> <span class="float-right">{{ $customer->username }}</span>
+                        <b>Last Login</b>
+                        <span class="float-right">
+                            {{ $customer->last_login ? $customer->last_login->diffForHumans() : 'Never' }}
+                        </span>
                     </li>
                     <li class="list-group-item">
-                        <b>Phone</b> <span class="float-right">{{ $customer->phone }}</span>
+                        <b>Service Type</b>
+                        <span class="float-right badge badge-info">{{ $customer->service_type }}</span>
                     </li>
                     <li class="list-group-item">
-                        <b>Email</b> <span class="float-right">{{ $customer->email }}</span>
+                        <b>Balance</b>
+                        <span class="float-right">UGX {{ number_format($customer->balance, 0) }}</span>
                     </li>
                     <li class="list-group-item">
-                        <b>Address</b> <span class="float-right">{{ $customer->address }}</span>
-                    </li>
-                    <li class="list-group-item">
-                        <b>City</b> <span class="float-right">{{ $customer->city }}</span>
-                    </li>
-                    <li class="list-group-item">
-                        <b>Balance</b> <span class="float-right">${{ number_format($customer->balance, 2) }}</span>
-                    </li>
-                    @if($customer->service_type === 'pppoe')
-                        <li class="list-group-item">
-                            <b>PPPoE Username</b> <span class="float-right">{{ $customer->pppoe_username }}</span>
-                        </li>
-                        @can('manage customers')
-                        <li class="list-group-item">
-                            <b>PPPoE Password</b> 
-                            <input type="password" value="{{ $customer->pppoe_password }}" 
-                                   class="float-right border-0 text-right bg-transparent" 
-                                   style="cursor: pointer;"
-                                   onmouseleave="this.type = 'password'" 
-                                   onmouseenter="this.type = 'text'" 
-                                   onclick="this.select()" 
-                                   readonly>
-                        </li>
-                        @endcan
-                        @if($customer->ip_address)
-                        <li class="list-group-item">
-                            <b>IP Address</b> <span class="float-right">{{ $customer->ip_address }}</span>
-                        </li>
-                        @endif
-                    @endif
-                    <li class="list-group-item">
-                        <b>Service Type</b> <span class="float-right">{{ ucfirst($customer->service_type) }}</span>
+                        <b>Active Sessions</b>
+                        <span class="float-right">{{ $customer->active_sessions_count }}</span>
                     </li>
                 </ul>
 
-                <div class="row">
-                    <div class="col-md-4">
-                        <a href="{{ route('customers.edit', $customer) }}" class="btn btn-primary btn-block">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="{{ route('customers.recharge', $customer) }}" class="btn btn-success btn-block">
-                            <i class="fas fa-money-bill"></i> Recharge
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <form action="{{ route('customers.toggle', $customer) }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-{{ $customer->status === 'active' ? 'warning' : 'success' }} btn-block">
-                                <i class="fas fa-power-off"></i> 
-                                {{ $customer->status === 'active' ? 'Suspend' : 'Activate' }}
-                            </button>
-                        </form>
-                    </div>
+                <div class="btn-group w-100 mb-2">
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#rechargeModal">
+                        <i class="fas fa-money-bill"></i> Recharge
+                    </button>
+                    <button type="button" class="btn btn-warning btn-sm" onclick="toggleStatus({{ $customer->id }})">
+                        <i class="fas fa-power-off"></i> {{ $customer->is_active ? 'Disable' : 'Enable' }}
+                    </button>
+                </div>
+                <div class="btn-group w-100">
+                    <button type="button" class="btn btn-info btn-sm" onclick="syncToMikrotik({{ $customer->id }})">
+                        <i class="fas fa-sync"></i> Sync to Mikrotik
+                    </button>
+                    <a href="{{ route('messages.single', ['customer_id' => $customer->id]) }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-envelope"></i> Send Message
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-9">
         <div class="card">
             <div class="card-header p-2">
                 <ul class="nav nav-pills">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#transactions" data-toggle="tab">
-                            Transactions
-                        </a>
+                        <a class="nav-link active" href="#details" data-toggle="tab">Details</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#sessions" data-toggle="tab">
-                            Active Sessions
-                        </a>
+                        <a class="nav-link" href="#sessions" data-toggle="tab">Active Sessions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#vouchers" data-toggle="tab">
-                            Vouchers
-                        </a>
+                        <a class="nav-link" href="#vouchers" data-toggle="tab">Vouchers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#transactions" data-toggle="tab">Transactions</a>
                     </li>
                 </ul>
             </div>
+
             <div class="card-body">
                 <div class="tab-content">
-                    <div class="tab-pane active" id="transactions">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Type</th>
-                                        <th>Amount</th>
-                                        <th>Method</th>
-                                        <th>Reference</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($customer->transactions()->latest()->take(10)->get() as $transaction)
-                                        <tr>
-                                            <td>{{ $transaction->created_at->format('Y-m-d H:i') }}</td>
-                                            <td>
-                                                <span class="badge badge-{{ $transaction->type === 'credit' ? 'success' : 'danger' }}">
-                                                    {{ ucfirst($transaction->type) }}
-                                                </span>
-                                            </td>
-                                            <td>${{ number_format($transaction->amount, 2) }}</td>
-                                            <td>{{ ucfirst($transaction->payment_method) }}</td>
-                                            <td>{{ $transaction->reference }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="5" class="text-center">No transactions found</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
+                    <!-- Details Tab -->
+                    <div class="tab-pane active" id="details">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Personal Information</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <th>Full Name</th>
+                                                <td>{{ $customer->name }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Username</th>
+                                                <td>{{ $customer->username }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Email</th>
+                                                <td>{{ $customer->email }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Phone</th>
+                                                <td>{{ $customer->phone }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Address</th>
+                                                <td>{{ $customer->address }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Created On</th>
+                                                <td>{{ $customer->created_at->format('M d, Y H:i:s') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Last Login</th>
+                                                <td>{{ $customer->last_login ? $customer->last_login->format('M d, Y H:i:s') : 'Never' }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Service Information</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <th>Service Type</th>
+                                                <td>{{ $customer->service_type }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Current Package</th>
+                                                <td>{{ $customer->currentPlan->name ?? 'No active plan' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Package Speed</th>
+                                                <td>{{ $customer->currentPlan ? $customer->currentPlan->download_speed . '/' . $customer->currentPlan->upload_speed . ' Mbps' : '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Balance</th>
+                                                <td>UGX {{ number_format($customer->balance, 0) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>IP Address</th>
+                                                <td>{{ $customer->ip_address ?? 'Dynamic' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>MAC Address</th>
+                                                <td>{{ $customer->mac_address ?? 'Not set' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Status</th>
+                                                <td>
+                                                    <span class="badge badge-{{ $customer->is_active ? 'success' : 'danger' }}">
+                                                        {{ $customer->is_active ? 'Active' : 'Inactive' }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Sessions Tab -->
                     <div class="tab-pane" id="sessions">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Start Time</th>
+                                        <th>Router</th>
                                         <th>IP Address</th>
                                         <th>MAC Address</th>
-                                        <th>Upload</th>
-                                        <th>Download</th>
+                                        <th>Started At</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($activeSessions as $session)
+                                    @forelse($customer->activeSessions as $session)
                                         <tr>
-                                            <td>{{ $session->start_time }}</td>
+                                            <td>{{ $session->router->name }}</td>
                                             <td>{{ $session->ip_address }}</td>
                                             <td>{{ $session->mac_address }}</td>
-                                            <td>{{ formatBytes($session->bytes_up) }}</td>
-                                            <td>{{ formatBytes($session->bytes_down) }}</td>
+                                            <td>{{ $session->started_at }}</td>
+                                            <td>
+                                                <button type="button" 
+                                                        class="btn btn-danger btn-sm"
+                                                        onclick="disconnectSession('{{ $session->id }}')">
+                                                    <i class="fas fa-times"></i> Disconnect
+                                                </button>
+                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -185,9 +227,10 @@
                         </div>
                     </div>
 
+                    <!-- Vouchers Tab -->
                     <div class="tab-pane" id="vouchers">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>Code</th>
@@ -219,35 +262,122 @@
                             </table>
                         </div>
                     </div>
+
+                    <!-- Transactions Tab -->
+                    <div class="tab-pane" id="transactions">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($customer->transactions as $transaction)
+                                        <tr>
+                                            <td>{{ $transaction->created_at }}</td>
+                                            <td>{{ $transaction->type }}</td>
+                                            <td>UGX {{ number_format($transaction->amount, 0) }}</td>
+                                            <td>{{ $transaction->description }}</td>
+                                            <td>
+                                                <span class="badge badge-{{ $transaction->status === 'completed' ? 'success' : 'warning' }}">
+                                                    {{ ucfirst($transaction->status) }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center">No transactions found</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Recharge Modal -->
+<div class="modal fade" id="rechargeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="{{ route('customers.recharge.store', $customer) }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title">Recharge Customer</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" name="amount" class="form-control" required min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Recharge</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @stop
 
 @section('css')
 <style>
-    .nav-pills .nav-link.active {
-        background-color: #007bff;
+    .profile-user-img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
     }
 </style>
 @stop
 
 @section('js')
 <script>
-    $(document).ready(function() {
-        // Activate tab from hash if present
-        var hash = window.location.hash;
-        if (hash) {
-            $('.nav-pills a[href="' + hash + '"]').tab('show');
+    function toggleStatus(customerId) {
+        if (confirm('Are you sure you want to change this customer\'s status?')) {
+            $.post(`/customers/${customerId}/toggle`, {
+                _token: '{{ csrf_token() }}'
+            }).done(function() {
+                location.reload();
+            });
         }
+    }
 
-        // Update hash on tab change
-        $('.nav-pills a').on('shown.bs.tab', function (e) {
-            window.location.hash = e.target.hash;
-        });
-    });
+    function disconnectSession(sessionId) {
+        if (confirm('Are you sure you want to disconnect this session?')) {
+            $.post(`/sessions/${sessionId}/disconnect`, {
+                _token: '{{ csrf_token() }}'
+            }).done(function() {
+                location.reload();
+            });
+        }
+    }
+
+    function syncToMikrotik(customerId) {
+        if (confirm('Are you sure you want to sync this customer to Mikrotik?')) {
+            $.post(`/customers/${customerId}/sync`, {
+                _token: '{{ csrf_token() }}'
+            }).done(function(response) {
+                toastr.success('Customer synced successfully');
+            }).fail(function(error) {
+                toastr.error('Failed to sync customer');
+            });
+        }
+    }
 </script>
 @stop

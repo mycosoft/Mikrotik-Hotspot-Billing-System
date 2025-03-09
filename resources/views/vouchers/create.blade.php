@@ -53,8 +53,8 @@
                                     required>
                                 <option value="">Select a router</option>
                                 @foreach($routers as $router)
-                                    <option value="{{ $router->name }}" 
-                                            {{ old('router') == $router->name ? 'selected' : '' }}
+                                    <option value="{{ $router->id }}" 
+                                            {{ old('router') == $router->id ? 'selected' : '' }}
                                             class="{{ $router->is_online ? 'text-success' : 'text-danger' }}">
                                         {{ $router->name }} ({{ $router->ip }}) 
                                         {{ $router->is_online ? '- Online' : '- Offline' }}

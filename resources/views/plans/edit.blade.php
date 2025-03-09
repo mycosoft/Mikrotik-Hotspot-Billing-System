@@ -14,6 +14,10 @@
                     @csrf
                     @method('PUT')
                     @include('plans.form')
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Update Plan</button>
+                        <a href="{{ route('plans.index') }}" class="btn btn-default float-right">Cancel</a>
+                    </div>
                 </form>
             </div>
         </div>
@@ -53,8 +57,71 @@
     <script>
         $(document).ready(function() {
             $('.select2').select2({
-                theme: 'bootstrap4'
+                theme: 'bootstrap4',
+                width: '100%'
             });
+
+            // Initialize select2
+            $('#bandwidth_id, #router_id').select2({
+                theme: 'bootstrap4',
+                placeholder: 'Select an option'
+            });
+
+            // Handle plan type change
+            function handlePlanTypeChange() {
+                const planType = $('#type').val();
+                const limitTypeGroup = $('#limitTypeGroup');
+                const timeLimitGroup = $('#timeLimitGroup');
+                const dataLimitGroup = $('#dataLimitGroup');
+
+                if (planType === 'unlimited') {
+                    limitTypeGroup.hide();
+                    timeLimitGroup.hide();
+                    dataLimitGroup.hide();
+                    $('#limit_type').val('');
+                    $('#time_limit').val('');
+                    $('#data_limit').val('');
+                } else {
+                    limitTypeGroup.show();
+                    handleLimitTypeChange();
+                }
+            }
+
+            // Handle limit type change
+            function handleLimitTypeChange() {
+                const limitType = $('#limit_type').val();
+                const timeLimitGroup = $('#timeLimitGroup');
+                const dataLimitGroup = $('#dataLimitGroup');
+
+                switch (limitType) {
+                    case 'time':
+                        timeLimitGroup.show();
+                        dataLimitGroup.hide();
+                        $('#data_limit').val('');
+                        break;
+                    case 'data':
+                        timeLimitGroup.hide();
+                        dataLimitGroup.show();
+                        $('#time_limit').val('');
+                        break;
+                    case 'both':
+                        timeLimitGroup.show();
+                        dataLimitGroup.show();
+                        break;
+                    default:
+                        timeLimitGroup.hide();
+                        dataLimitGroup.hide();
+                        $('#time_limit').val('');
+                        $('#data_limit').val('');
+                }
+            }
+
+            // Attach event handlers
+            $('#type').change(handlePlanTypeChange);
+            $('#limit_type').change(handleLimitTypeChange);
+
+            // Initial setup
+            handlePlanTypeChange();
         });
     </script>
 @stop

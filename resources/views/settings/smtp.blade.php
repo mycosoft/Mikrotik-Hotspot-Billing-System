@@ -111,48 +111,7 @@
                 </form>
             </div>
 
-            <div class="card card-primary card-outline">
-                <div class="card-header">
-                    <h3 class="card-title">Help & Troubleshooting</h3>
-                </div>
-                <div class="card-body">
-                    <h5>Common SMTP Settings</h5>
-                    <p>Here are some common SMTP settings for popular email providers:</p>
 
-                    <strong>Gmail:</strong>
-                    <ul>
-                        <li>SMTP Host: smtp.gmail.com</li>
-                        <li>SMTP Port: 587</li>
-                        <li>Encryption: TLS</li>
-                        <li>Requires App Password</li>
-                    </ul>
-
-                    <strong>Outlook/Office 365:</strong>
-                    <ul>
-                        <li>SMTP Host: smtp.office365.com</li>
-                        <li>SMTP Port: 587</li>
-                        <li>Encryption: TLS</li>
-                    </ul>
-
-                    <strong>Yahoo Mail:</strong>
-                    <ul>
-                        <li>SMTP Host: smtp.mail.yahoo.com</li>
-                        <li>SMTP Port: 587</li>
-                        <li>Encryption: TLS</li>
-                    </ul>
-
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i>
-                        If you're having trouble, make sure to:
-                        <ul class="mb-0">
-                            <li>Check your email provider's SMTP settings</li>
-                            <li>Enable "Less secure app access" or generate an App Password</li>
-                            <li>Verify your email and password are correct</li>
-                            <li>Check if your email provider requires additional setup</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 @stop

@@ -18,7 +18,9 @@
                     <div class="card-body">
                         <!-- Basic Information -->
                         <div class="form-group">
-                            <label for="name">Full Name</label>
+                            <label for="name">
+                                <i class="fas fa-user"></i> Full Name
+                            </label>
                             <input type="text" 
                                    class="form-control @error('name') is-invalid @enderror" 
                                    id="name" 
@@ -31,7 +33,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="username">Username</label>
+                            <label for="username">
+                                <i class="fas fa-at"></i> Username
+                            </label>
                             <input type="text" 
                                    class="form-control @error('username') is-invalid @enderror" 
                                    id="username" 
@@ -44,7 +48,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="password">Password</label>
+                            <label for="password">
+                                <i class="fas fa-lock"></i> Password
+                            </label>
                             <input type="password" 
                                    class="form-control @error('password') is-invalid @enderror" 
                                    id="password" 
@@ -56,7 +62,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="email">Email Address</label>
+                            <label for="email">
+                                <i class="fas fa-envelope"></i> Email Address
+                            </label>
                             <input type="email" 
                                    class="form-control @error('email') is-invalid @enderror" 
                                    id="email" 
@@ -68,7 +76,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="phone">Phone Number</label>
+                            <label for="phone">
+                                <i class="fas fa-phone"></i> Phone Number
+                            </label>
                             <input type="tel" 
                                    class="form-control @error('phone') is-invalid @enderror" 
                                    id="phone" 
@@ -81,7 +91,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="address">Address</label>
+                            <label for="address">
+                                <i class="fas fa-map-marker-alt"></i> Address
+                            </label>
                             <textarea class="form-control @error('address') is-invalid @enderror" 
                                       id="address" 
                                       name="address" 
@@ -92,11 +104,13 @@
                         </div>
 
                         <!-- Service Information -->
-                        <h4 class="mt-4">Service Information</h4>
+                        <h4 class="mt-4"><i class="fas fa-cogs"></i> Service Information</h4>
                         <hr>
 
                         <div class="form-group">
-                            <label for="service_type">Service Type</label>
+                            <label for="service_type">
+                                <i class="fas fa-network-wired"></i> Service Type
+                            </label>
                             <select class="form-control @error('service_type') is-invalid @enderror" 
                                     id="service_type" 
                                     name="service_type">
@@ -111,7 +125,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="status">Status</label>
+                            <label for="status">
+                                <i class="fas fa-toggle-on"></i> Status
+                            </label>
                             <select class="form-control @error('status') is-invalid @enderror" 
                                     id="status" 
                                     name="status">
@@ -166,23 +182,25 @@
                         </div>
 
                         <!-- Location Information -->
-                        <h4 class="mt-4">Location Information</h4>
+                        <h4 class="mt-4"><i class="fas fa-map"></i> Location Information (Optional)</h4>
                         <hr>
 
                         <div class="form-group">
                             <div id="map" style="height: 400px;"></div>
+                            <small class="text-muted">Click on the map to set location or leave empty if not needed.</small>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="latitude">Latitude</label>
+                                    <label for="latitude">
+                                        <i class="fas fa-arrows-alt-v"></i> Latitude
+                                    </label>
                                     <input type="text" 
                                            class="form-control @error('latitude') is-invalid @enderror" 
                                            id="latitude" 
                                            name="latitude" 
-                                           value="{{ old('latitude') }}"
-                                           readonly>
+                                           value="{{ old('latitude') }}">
                                     @error('latitude')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
@@ -190,13 +208,14 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="longitude">Longitude</label>
+                                    <label for="longitude">
+                                        <i class="fas fa-arrows-alt-h"></i> Longitude
+                                    </label>
                                     <input type="text" 
                                            class="form-control @error('longitude') is-invalid @enderror" 
                                            id="longitude" 
                                            name="longitude" 
-                                           value="{{ old('longitude') }}"
-                                           readonly>
+                                           value="{{ old('longitude') }}">
                                     @error('longitude')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
@@ -239,39 +258,45 @@
 @section('js')
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script>
-        // Initialize the map
-        var map = L.map('map').setView([-1.292066, 36.821945], 13); // Default to Nairobi
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: ' OpenStreetMap contributors'
-        }).addTo(map);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize map centered on Kampala, Uganda
+            var map = L.map('map').setView([0.3476, 32.5825], 13);
 
-        var marker;
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: ' OpenStreetMap contributors'
+            }).addTo(map);
 
-        // Handle map clicks
-        map.on('click', function(e) {
-            if (marker) {
-                map.removeLayer(marker);
-            }
-            marker = L.marker(e.latlng).addTo(map);
-            
-            // Update form fields
-            document.getElementById('latitude').value = e.latlng.lat.toFixed(8);
-            document.getElementById('longitude').value = e.latlng.lng.toFixed(8);
+            var marker;
+
+            // Handle map clicks
+            map.on('click', function(e) {
+                var lat = e.latlng.lat;
+                var lng = e.latlng.lng;
+
+                // Update form fields
+                document.getElementById('latitude').value = lat.toFixed(6);
+                document.getElementById('longitude').value = lng.toFixed(6);
+
+                // Update or create marker
+                if (marker) {
+                    marker.setLatLng(e.latlng);
+                } else {
+                    marker = L.marker(e.latlng).addTo(map);
+                }
+            });
+
+            // Handle service type changes
+            document.getElementById('service_type').addEventListener('change', function() {
+                var pppoeFields = document.getElementById('pppoe_fields');
+                if (this.value === 'PPPoE') {
+                    pppoeFields.style.display = 'block';
+                } else {
+                    pppoeFields.style.display = 'none';
+                }
+            });
+
+            // Trigger change event to set initial state
+            document.getElementById('service_type').dispatchEvent(new Event('change'));
         });
-
-        // Show/hide PPPoE fields based on service type
-        document.getElementById('service_type').addEventListener('change', function() {
-            var pppoeFields = document.getElementById('pppoe_fields');
-            if (this.value === 'PPPoE') {
-                pppoeFields.style.display = 'block';
-            } else {
-                pppoeFields.style.display = 'none';
-            }
-        });
-
-        // Show PPPoE fields if service type is already set to PPPoE (e.g., on form validation failure)
-        if (document.getElementById('service_type').value === 'PPPoE') {
-            document.getElementById('pppoe_fields').style.display = 'block';
-        }
     </script>
 @stop

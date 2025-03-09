@@ -98,30 +98,21 @@
                                         <div>{{ $customer->name }}</div>
                                         <small class="text-muted">{{ $customer->address }}</small>
                                     </td>
+                                    <td>{{ $customer->username }}</td>
+                                    <td>{{ $customer->service_type }}</td>
                                     <td>
-                                        <div>{{ $customer->username }}</div>
-                                        @if($customer->active_sessions_count > 0)
-                                            <small class="text-success">
-                                                <i class="fas fa-circle"></i> Online
-                                            </small>
+                                        <div>{{ $customer->phone }}</div>
+                                        <small class="text-muted">{{ $customer->email }}</small>
+                                    </td>
+                                    <td>UGX {{ number_format($customer->balance) }}</td>
+                                    <td>
+                                        @if($customer->status == 'Active')
+                                            <span class="badge badge-success">Active</span>
+                                        @elseif($customer->status == 'Inactive')
+                                            <span class="badge badge-secondary">Inactive</span>
                                         @else
-                                            <small class="text-muted">
-                                                <i class="fas fa-circle"></i> Offline
-                                            </small>
+                                            <span class="badge badge-danger">Suspended</span>
                                         @endif
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-info">{{ $customer->service_type }}</span>
-                                    </td>
-                                    <td>
-                                        <div>{{ $customer->email }}</div>
-                                        <small class="text-muted">{{ $customer->phone }}</small>
-                                    </td>
-                                    <td>${{ number_format($customer->balance, 2) }}</td>
-                                    <td>
-                                        <span class="badge badge-{{ $customer->status === 'active' ? 'success' : 'danger' }}">
-                                            {{ ucfirst($customer->status) }}
-                                        </span>
                                     </td>
                                     <td>
                                         <div class="btn-group">
@@ -189,7 +180,7 @@
                 // Initialize the map
                 var map = L.map('customer-map').setView([-1.292066, 36.821945], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
+                    attribution: ' OpenStreetMap contributors'
                 }).addTo(map);
 
                 // Add markers for customers with coordinates
