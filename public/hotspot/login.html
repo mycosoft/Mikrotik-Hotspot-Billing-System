@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNET Hotspot - Welcome</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    $(if chap-id)
+    <noscript>
+        <center><b>JavaScript required. Enable JavaScript to continue.</b></center>
+    </noscript>
+    $(endif)
+
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">BNET Hotspot</a>
+            <div class="connection-status">
+                <span id="signal-strength">📶 Strong Signal</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="login-card">
+            <div class="logo-section">
+                <img src="images/logo.png" alt="BNET Hotspot" class="logo-img">
+                <h1 class="logo-text">BNET Hotspot, Unlimited Internet</h1>
+            </div>
+
+            <div class="login-tabs">
+                <button class="tab-btn active" onclick="switchTab('voucher')">
+                    <i class="fas fa-ticket"></i> Voucher
+                </button>
+                <button class="tab-btn" onclick="switchTab('member')">
+                    <i class="fas fa-user"></i> Member
+                </button>
+            </div>
+
+            <!-- Voucher Login Form -->
+            <div id="voucherLogin" class="login-form active">
+                <form name="voucherForm" id="voucherForm" onsubmit="return activateVoucher(event)">
+                    <input type="hidden" name="mac" value="$(mac-esc)" />
+                    <input type="hidden" name="ip" value="$(ip)" />
+                    <input type="hidden" name="hostname" value="$(hostname)" />
+                    <input type="hidden" name="router" value="$(router-id)" />
+                    <input type="hidden" name="chap-id" value="$(chap-id)" />
+                    <input type="hidden" name="chap-challenge" value="$(chap-challenge)" />
+                    
+                    <div class="input-group">
+                        <i class="fas fa-ticket"></i>
+                        <input name="voucher" type="text" placeholder="Enter Voucher Code" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Activate Voucher</button>
+                </form>
+            </div>
+
+            <!-- Member Login Form -->
+            <div id="memberLogin" class="login-form">
+                <form name="login" action="$(link-login-only)" method="post" onsubmit="return doLogin()">
+                    <input type="hidden" name="dst" value="$(link-orig)" />
+                    <input type="hidden" name="popup" value="true" />
+                    
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input name="username" type="text" placeholder="Username" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input name="password" type="password" placeholder="Password" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Login Hotspot</button>
+                </form>
+            </div>
+
+            $(if trial == 'yes')
+            <div class="trial-section">
+                <p class="trial-text">First time user? Click to activate Free Internet</p>
+                <button class="trial-btn" onclick="activateTrial()">
+                    <i class="fas fa-clock"></i> 10 MINS FREE TRIAL
+                </button>
+            </div>
+            $(endif)
+
+            <div class="contact-section">
+                <p class="contact-text">Need help? Contact Us :</p>
+                <div class="contact-buttons">
+                    <a href="tel:+256750501151" class="contact-btn call-btn">
+                        <i class="fas fa-phone"></i> Call Us
+                    </a>
+                    <a href="https://wa.me/256750501151" class="contact-btn whatsapp-btn">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+
+            <div class="loader" id="loader" style="display: none;"></div>
+            <p class="status-text" id="statusText"></p>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            const voucherTab = document.getElementById('voucherLogin');
+            const memberTab = document.getElementById('memberLogin');
+            const tabs = document.querySelectorAll('.tab-btn');
+            
+            if (tab === 'voucher') {
+                voucherTab.classList.add('active');
+                memberTab.classList.remove('active');
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                memberTab.classList.add('active');
+                voucherTab.classList.remove('active');
+                tabs[1].classList.add('active');
+                tabs[0].classList.remove('active');
+            }
+        }
+
+        async function activateVoucher(event) {
+            event.preventDefault();
+            
+            const form = document.getElementById('voucherForm');
+            const loader = document.getElementById('loader');
+            const statusText = document.getElementById('statusText');
+            const voucher = form.voucher.value;
+            
+            loader.style.display = 'block';
+            statusText.textContent = 'Activating voucher...';
+
+            try {
+                const response = await fetch('/hotspot/auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '$(csrf-token)'
+                    },
+                    body: JSON.stringify({
+                        username: voucher,
+                        password: voucher,
+                        mac: form.mac.value,
+                        ip: form.ip.value,
+                        hostname: form.hostname.value,
+                        router: form.router.value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    statusText.textContent = 'Voucher activated successfully! Connecting...';
+                    // Submit to MikroTik for final authentication
+                    document.location = '$(link-login-only)?username=' + 
+                        encodeURIComponent(voucher) + 
+                        '&password=' + encodeURIComponent(voucher) +
+                        '&dst=$(link-orig)';
+                } else {
+                    statusText.textContent = data.message || 'Failed to activate voucher';
+                    loader.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                statusText.textContent = 'An error occurred. Please try again.';
+                loader.style.display = 'none';
+            }
+
+            return false;
+        }
+
+        function doLogin() {
+            document.login.username.value = document.login.username.value.toLowerCase();
+            document.login.password.value = document.login.password.value.toLowerCase();
+            return true;
+        }
+
+        $(if trial == 'yes')
+        function activateTrial() {
+            document.location = '$(link-login-only)?username=T-$(mac-esc)&password=trial';
+        }
+        $(endif)
+    </script>
+</body>
+</html>

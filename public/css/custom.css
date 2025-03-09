@@ -1,0 +1,41 @@
+.navbar-notification.dropdown .dropdown-menu {
+    min-width: 280px;
+    padding: 0;
+}
+
+.profile-submenu {
+    background: linear-gradient(135deg, #9c27b0 0%, #2196f3 100%);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.profile-submenu .fas {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.profile-submenu .text {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0 5px;
+}
+
+.profile-submenu .label {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.dropdown-menu .dropdown-item {
+    padding: 10px 20px;
+}
+
+.dropdown-menu .dropdown-item i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.dropdown-menu .dropdown-divider {
+    margin: 0;
+}
