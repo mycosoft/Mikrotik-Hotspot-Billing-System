@@ -107,7 +107,7 @@ return [
         ),
     ],
 
-    'providers' => [
+    'providers' => ServiceProvider::defaultProviders()->merge([
         /*
          * Laravel Framework Service Providers...
          */
@@ -149,7 +149,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\MikrotikServiceProvider::class,
-    ],
+        App\Providers\SettingsServiceProvider::class,
+    ])->toArray(),
 
     'aliases' => [
         'App' => Illuminate\Support\Facades\App::class,
